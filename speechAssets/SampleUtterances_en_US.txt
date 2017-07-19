@@ -2,3 +2,14 @@ GetNewFactIntent a fact
 GetNewFactIntent tell me a fact
 GetNewFactIntent give me a fact
 GetNewFactIntent give me something
+GetNewFactIntent an architecture fact
+GetNewFactIntent a fact about architecture
+GetNewFactIntent tell me a fact about architecture
+GetNewFactIntent tell me a fact about the history of architecture
+GetNewFactIntent tell me something instresting about architecture
+GetNewFactIntent give me something about architecture
+GetNewFactIntent give me something about architecture history
+GetNewFactIntent what about archtiecture is intresting
+GetNewFactIntent teach me something intresting about architecture
+GetNewFactIntent give me information about architecture
+GetNewFactIntent give me information about architecture history
