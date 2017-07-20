@@ -13,3 +13,20 @@ GetNewFactIntent what about archtiecture is intresting
 GetNewFactIntent teach me something intresting about architecture
 GetNewFactIntent give me information about architecture
 GetNewFactIntent give me information about architecture history
+GetNewYearFactIntent {FACT_YEAR}
+GetNewYearFactIntent {FACT_YEAR} fact
+GetNewYearFactIntent a fact from {FACT_YEAR}
+GetNewYearFactIntent tell me a fact from {FACT_YEAR}
+GetNewYearFactIntent give me a fact from {{FACT_YEAR}}
+GetNewYearFactIntent give me something about {FACT_YEAR}
+GetNewYearFactIntent an architecture fact about {FACT_YEAR}
+GetNewYearFactIntent a fact about architecture
+GetNewYearFactIntent tell me a fact about architecture form {FACT_YEAR}
+GetNewYearFactIntent tell me a fact about the history of architecture from the year {FACT_YEAR}
+GetNewYearFactIntent tell me something instresting about architecture that happened in {FACT_YEAR}
+GetNewYearFactIntent give me something about architecture from {FACT_YEAR}
+GetNewYearFactIntent give me something about architecture history from {FACT_YEAR}
+GetNewYearFactIntent what about archtiecture is intresting in {FACT_YEAR}
+GetNewYearFactIntent teach me something intresting about architecture from {FACT_YEAR}
+GetNewYearFactIntent give me information about architecture for {FACT_YEAR}
+GetNewYearFactIntent give me information about architecture history that happened in {{FACT_YEAR}}
