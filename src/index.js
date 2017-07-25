@@ -2,9 +2,22 @@
 var Alexa = require('alexa-sdk');
 var APP_ID = undefined;  // can be replaced with your app ID if publishing
 var facts = require('./facts');
+
 var GET_FACT_MSG_EN = [
-    "Here's your fact: "
+    "Here's your fact: ",
+    "Did you know that: ",
+    "I find it very intresting that: ",
+    "Time for your architecture history lesson: ",
+    "Now listen up: "
 ]
+
+var GET_REPROMPT_MESSAGE_EN = [
+    "Would you lear to hear about another fact: ",
+    "Do you have any other question: ",
+    "Would you like to try antoher year: ",
+    "How about something else: "
+]
+
 // Test hooks - do not remove!
 exports.GetFactMsg = GET_FACT_MSG_EN;
 var APP_ID_TEST = "mochatest";  // used for mocha tests to prevent warning
@@ -18,7 +31,8 @@ var languageStrings = {
         "translation": {
             "FACTS": facts.FACTS_EN,
             "SKILL_NAME": "Architecture History Facts",  // OPTIONAL change this to a more descriptive name
-            "GET_FACT_MESSAGE": GET_FACT_MSG_EN[0],
+            "GET_FACT_MESSAGE": GET_FACT_MSG_EN,
+            "GET_REPROMPT_MESSAGE": GET_REPROMPT_MESSAGE_EN,
             "NO_YEAR_MESSAGE": "There is not a fact for",
             "HELP_MESSAGE": "You can say tell me a fact, or, you can say exit... What can I help you with?",
             "HELP_REPROMPT": "What can I help you with?",
@@ -39,20 +53,17 @@ exports.handler = function (event, context, callback) {
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
+    // TODO (Part 2) add an intent for specifying a fact by year named 'GetNewYearFactIntent'
+    // TODO (Part 2) provide a function for the new intent named 'GetYearFact' 
+    //     that emits a randomized fact that includes the year requested by the user
+    //     - if such a fact is not available, tell the user this and provide an alternative fact.
 
-/*
-    X TODO (Part 2) add an intent for specifying a fact by year named 'GetNewYearFactIntent'
-    X TODO (Part 2) provide a function for the new intent named 'GetYearFact' 
-        that emits a randomized fact that includes the year requested by the user
-        - if such a fact is not available, tell the user this and provide an alternative fact.
-*/
-        /*TODO (Part 3) Keep the session open by providing the fact with :askWithCard instead of :tellWithCard
-        - make sure the user knows that they need to respond
-        - provide a reprompt that lets the user know how they can respond
-    TODO (Part 3) Provide a randomized response for the GET_FACT_MESSAGE
-        - add message to the array GET_FACT_MSG_EN
-        - randomize this starting portion of the response for conversational variety
-*/
+    // TODO (Part 3) Keep the session open by providing the fact with :askWithCard instead of :tellWithCard
+    //     - make sure the user knows that they need to respond
+    //     - provide a reprompt that lets the user know how they can respond
+    // TODO (Part 3) Provide a randomized response for the GET_FACT_MESSAGE
+    //     - add message to the array GET_FACT_MSG_EN
+    //     - randomize this starting portion of the response for conversational variety
 
 var handlers = {
     'LaunchRequest': function () {
@@ -60,38 +71,52 @@ var handlers = {
     },
     'GetNewFactIntent': function () {
         this.emit('GetFact');
-    },    'GetNewYearFactIntent': function () {
+    },
+    'GetNewYearFactIntent': function () {
         this.emit('GetYearFact');
     },
     'GetFact': function () {
         // Get a random fact from the facts list
         // Use this.t() to get corresponding language data
         var factArr = this.t('FACTS');
-        var randomFact = randomPhrase(factArr);
+        var randomFact = random(factArr);
+
+        var factMsgArr = this.t("GET_FACT_MESSAGE")
+        var randomMsg = random(factMsgArr);
+        
+        let repromtMsgArr = this.t("GET_REPROMPT_MESSAGE");
+        let repromtMsg = random(repromtMsgArr);
 
         // Create speech output
-        var speechOutput = this.t("GET_FACT_MESSAGE") + randomFact;
-        this.emit(':tellWithCard', speechOutput, this.t("SKILL_NAME"), randomFact)
+        var speechOutput = randomMsg + randomFact;
+
+        this.emit(':askWithCard', speechOutput, repromtMsg, this.t("SKILL_NAME"), randomFact)
     },
     'GetNewYearFactIntent': function () {
         let year = this.event.request.intent.slots.FACT_YEAR.value;
         let factArr = this.t('FACTS');
-        let randomFact = randomPhrase(factArr);
-        let factMessage = this.t("GET_FACT_MESSAGE");
+        let randomFact = random(factArr);
+        
+        let factMsgArr = this.t("GET_FACT_MESSAGE")
+        let randomMsg = random(factMsgArr);
+        
         let noYearMessage = this.t("NO_YEAR_MESSAGE");
 
-        let speechOutput = function(year, randomFact, factArr, factMessage, noYearMessage){
+        let repromtMsgArr = this.t("GET_REPROMPT_MESSAGE");
+        let repromtMsg = random(repromtMsgArr);
+
+        // Create speech output
+        let speechOutput = function(year, randomFact, factArr, randomMsg, noYearMessage){
             let yearFacts = factArr.filter(word => word.indexOf(year) != -1);
 
             if( yearFacts.length > 0){
-                return noYearMessage +  year  + factMessage + randomFact;
+                return noYearMessage +  year  + randomMsg + randomFact;
             } else {
-                return factMessage + randomFact;
+                return randomMsg + randomFact;
             }
         };
-
-        // Create speech output
-        this.emit(':tellWithCard', speechOutput(year, randomFact, factArr), this.t("SKILL_NAME"), randomFact);
+      
+        this.emit(':askWithCard', speechOutput(year, randomFact, factArr),  repromtMsg, this.t("SKILL_NAME"), randomFact);
     },
     'AMAZON.HelpIntent': function () {
         var speechOutput = this.t("HELP_MESSAGE");
@@ -106,10 +131,10 @@ var handlers = {
     }
 };
 
-function randomPhrase(phraseArr) {
+var random = function(arr) {
     // returns a random phrase
     // where phraseArr is an array of string phrases
     var i = 0;
-    i = Math.floor(Math.random() * phraseArr.length);
-    return (phraseArr[i]);
+    i = Math.floor(Math.random() * arr.length);
+    return (arr[i]);
 };
