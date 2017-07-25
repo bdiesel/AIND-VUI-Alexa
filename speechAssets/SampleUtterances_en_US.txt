@@ -17,7 +17,7 @@ GetNewYearFactIntent {FACT_YEAR}
 GetNewYearFactIntent {FACT_YEAR} fact
 GetNewYearFactIntent a fact from {FACT_YEAR}
 GetNewYearFactIntent tell me a fact from {FACT_YEAR}
-GetNewYearFactIntent give me a fact from {{FACT_YEAR}}
+GetNewYearFactIntent give me a fact from {FACT_YEAR}
 GetNewYearFactIntent give me something about {FACT_YEAR}
 GetNewYearFactIntent an architecture fact about {FACT_YEAR}
 GetNewYearFactIntent a fact about architecture
@@ -29,4 +29,4 @@ GetNewYearFactIntent give me something about architecture history from {FACT_YEA
 GetNewYearFactIntent what about archtiecture is intresting in {FACT_YEAR}
 GetNewYearFactIntent teach me something intresting about architecture from {FACT_YEAR}
 GetNewYearFactIntent give me information about architecture for {FACT_YEAR}
-GetNewYearFactIntent give me information about architecture history that happened in {{FACT_YEAR}}
+GetNewYearFactIntent give me information about architecture history that happened in {FACT_YEAR}
