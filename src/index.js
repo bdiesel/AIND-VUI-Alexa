@@ -33,7 +33,7 @@ var languageStrings = {
             "SKILL_NAME": "Architecture History Facts",  // OPTIONAL change this to a more descriptive name
             "GET_FACT_MESSAGE": GET_FACT_MSG_EN,
             "GET_REPROMPT_MESSAGE": GET_REPROMPT_MESSAGE_EN,
-            "NO_YEAR_MESSAGE": "There is not a fact for",
+            "NO_YEAR_MESSAGE": "Sorry I don't have a fact for ",
             "HELP_MESSAGE": "You can say tell me a fact, or, you can say exit... What can I help you with?",
             "HELP_REPROMPT": "What can I help you with?",
             "STOP_MESSAGE": "Goodbye!"
@@ -95,29 +95,33 @@ var handlers = {
     'GetNewYearFactIntent': function () {
         let year = this.event.request.intent.slots.FACT_YEAR.value;
         let factArr = this.t('FACTS');
-        let randomFact = random(factArr);
+        let yearFacts = factArr.filter(word => word.indexOf(year) >= 0);
         
+        let repromtMsgArr = this.t("GET_REPROMPT_MESSAGE");
         let factMsgArr = this.t("GET_FACT_MESSAGE")
-        let randomMsg = random(factMsgArr);
-        
         let noYearMessage = this.t("NO_YEAR_MESSAGE");
 
-        let repromtMsgArr = this.t("GET_REPROMPT_MESSAGE");
+        let randomMsg = random(factMsgArr);
+        let randomYearFact = random(yearFacts);
+        let randomFact = random(factArr);
         let repromtMsg = random(repromtMsgArr);
 
         // Create speech output
-        let speechOutput = function(year, randomFact, factArr, randomMsg, noYearMessage){
-            let yearFacts = factArr.filter(word => word.indexOf(year) != -1);
-
-            if( yearFacts.length > 0){
-                return noYearMessage +  year  + randomMsg + randomFact;
+        let speechOutput = function(year, randomYearFact){
+            if( randomYearFact ){
+                return randomMsg + randomYearFact;
             } else {
-                return randomMsg + randomFact;
+                 return `${noYearMessage} ${year}, ` + randomMsg + randomFact;
             }
         };
-      
-        this.emit(':askWithCard', speechOutput(year, randomFact, factArr),  repromtMsg, this.t("SKILL_NAME"), randomFact);
+
+        if (year) {
+            this.emit(':askWithCard', speechOutput(year, randomYearFact), repromtMsg, this.t("SKILL_NAME"), randomYearFact);
+        } else {
+            this.emit(':ask', "Sorry I didn't understand the year you said.", "Please repeat.");
+        }
     },
+
     'AMAZON.HelpIntent': function () {
         var speechOutput = this.t("HELP_MESSAGE");
         var reprompt = this.t("HELP_MESSAGE");
